@@ -15,12 +15,12 @@ func init(){
 		fmt.Println(err)
 	}
 }
-func Denglu(d *_struct.Delu) (err error) {
+func (d *_struct.Delu)Denglu (err error) {
 	dl:= _struct.Delu{}
 	err =Db.QueryRow("select num,password from delu where num=$1 and password=$2").Scan(&dl.Num,&dl.Password)
 	return err
 }
-func zhuce(r *_struct.Delu)(err error)  {
+func (r *_struct.Delu)zhuce(err error)  {
 	zc:= _struct.Delu{}
 	_, err = Db.Exec("insert into delu(num,password) values (?,?)", &zc.Num, &zc.Password)
 	return err
