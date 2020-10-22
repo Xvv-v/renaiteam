@@ -2,31 +2,125 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"mygo/main/my_object/struct"
+	_struct "mygo/main/my/struct"
+	_ "mygo/main/my/struct"
 )
 
 var Db *sql.DB
-func init(){
+func Init() {
 	var err error
 	Db,err=sql.Open("mysql", "root:123456@tcp(localhost:3306)/school")
 	if err!=nil{
-		fmt.Println(err)
+		return
 	}
 }
-func (d *_struct.Delu)Denglu (err error) {
-	dl:= _struct.Delu{}
-	err =Db.QueryRow("select num,password from delu where num=$1 and password=$2").Scan(&dl.Num,&dl.Password)
-	return err
+func Close()  {
+	err:=Db.Close()
+	if err!=nil{
+		return
+	}
 }
-func (r *_struct.Delu)zhuce(err error)  {
-	zc:= _struct.Delu{}
-	_, err = Db.Exec("insert into delu(num,password) values (?,?)", &zc.Num, &zc.Password)
-	return err
+func  Login (login _struct.Login) bool{
+	stmt, _ :=Db.Prepare("select num,password from delu where num=? and password=?")
+	rows,err:=stmt.Query(login.Num,login.Password)
+	var num1 int
+	var password1 string
+	if err!=nil{
+		return false
+	}else{
+		for rows.Next(){
+			rows.Columns()
+			rows.Scan(&num1,&password1)
+
+		}
+		if login.Num==num1&&login.Password==password1{
+			return true
+		} else{
+			return false
+		}
+	}
 }
-func retrieve(id int)(post _struct.Text,err error) {
-	post = _struct.Text{}
-	err =Db.QueryRow("select id,text from jishiben where id=$1").Scan(&post.ID)
-	return
+func Register(login _struct.Login) bool {
+	stmt1, _ :=Db.Prepare("select num from delu where num=? ")
+	_,err2:=stmt1.Query(login.Num)
+	if err2!=nil{
+		return false
+	}else{
+		stmt, err := Db.Prepare("insert into delu(num,password)values(?,?)")
+		_,err1:=stmt.Exec(login.Num,login.Password)
+		if err!=nil{
+			return false
+		}else{
+			if err1!=nil{
+				return false
+			} else{
+				return true
+			}
+		}
+	}
+}
+func Addition(test _struct.Text) bool {
+	stmt, _ := Db.Prepare("select id from Text where id=?")
+	_, err := stmt.Query(test.Num)
+	if err != nil {
+		return false
+	} else {
+		stmt1,_:=Db.Prepare("insert into Text(id,text)values(?,?)")
+		_,err:=stmt1.Exec(test.Num,test.Text)
+		if err!=nil{
+			return false
+		}else{
+			return true
+		}
+	}
+}
+func Delete(test _struct.Text) bool {
+	stmt, _ := Db.Prepare("select id from Text where id=?")
+	res, _:= stmt.Query(test.Num)
+	var id int
+	for res.Next() {
+		res.Scan(&id)
+	}
+	if id==test.Num {
+		stmt,_:=Db.Prepare("delete from Text where id=?")
+		_,err:=stmt.Exec(test.Num)
+		if err!=nil{
+			return false
+		}else {
+			return true
+		}
+	}else{
+		return false
+	}
+}
+func Modification(test _struct.Text) bool {
+	stmt, _ := Db.Prepare("select id from Text where id=?")
+	res, _:= stmt.Query(test.Num)
+	var id int
+	for res.Next() {
+		res.Scan(&id)
+	}
+	if id==test.Num {
+		stmt,_:=Db.Prepare("update Text set text=? where id=?")
+		_,err:=stmt.Exec(test.Text,test.Num)
+		if err!=nil{
+			return false
+		}else {
+			return true
+		}
+	}else{
+		return false
+	}
+}
+func Show(test [] _struct.Text) ([] _struct.Text) {
+	data,err:=Db.Query("select *from Text")
+	i:=0
+	if err!=nil{
+		for data.Next(){
+			data.Scan(&test[i].Num,&test[i].Text)
+			i=i+1
+		}
+	}
+	return test
 }

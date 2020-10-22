@@ -2,25 +2,111 @@ package main
 
 import (
 	"encoding/json"
-	"mygo/main/my_object/struct"
+	"mygo/main/my/mysql"
+	_struct "mygo/main/my/struct"
 	"net/http"
+	_ "mygo/main/my/mysql"
+	_ "mygo/main/my/struct"
 )
-
-//noinspection ALL
-func Delu_01(w http.ResponseWriter,r *http.Request)  {
-	len:=r.ContentLength
-	body:=make([]byte,len)
-	r.Body.Read(body)
-	dl:= _struct.Delu{}
-	json.Unmarshal(body,&dl)
-	err:=dl.Denglu()
-	if err!=nil{
-		return
+func Login(w http.ResponseWriter,r *http.Request)  {
+	var dl _struct.Login
+	json.NewDecoder(r.Body).Decode(&dl)//获取前端的json数据\
+	mysql.Init()
+	bool1:=mysql.Login(dl)
+	if bool1==true{
+		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "验证成功！"})
+		w.Write(msg)
+	} else{
+		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "验证失败账号或密码错误！"})
+			w.WriteHeader(400)
+			w.Write(msg)
 	}
-	w.WriteHeader(200)
-	return
+	mysql.Close()
 }
+func register (w http.ResponseWriter,r *http.Request)  {
+	mysql.Init()
+	var dl _struct.Login
+	json.NewDecoder(r.Body).Decode(&dl)//获取前端的json数据\
+	bool1:=mysql.Register(dl)
+	if bool1==true{
+		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "注册成功！"})
+		w.Write(msg)
+	} else{
+		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "注册失败账号已存在！"})
+		w.WriteHeader(400)
+		w.Write(msg)
+	}
+	mysql.Close()
+}
+func addition (w http.ResponseWriter,r *http.Request)  {
+	mysql.Init()
+	var test _struct.Text
+	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
+	bool1:=mysql.Addition(test)
+	if bool1==true{
+		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "添加成功！"})
+		w.Write(msg)
+	}else{
+		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "添加失败！"})
+		w.WriteHeader(400)
+		w.Write(msg)
+	}
+	mysql.Close()
+}
+func delete(w http.ResponseWriter,r *http.Request)  {
+	mysql.Init()
+	var test _struct.Text
+	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
+	bool1:=mysql.Delete(test)
+	if bool1==true{
+		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "删除成功！"})
+		w.Write(msg)
+	}else{
+		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "删除失败！"})
+		w.WriteHeader(400)
+		w.Write(msg)
+	}
+	mysql.Close()
+	
+}
+func modification(w http.ResponseWriter,r *http.Request)  {
+	mysql.Init()
+	var test _struct.Text
+	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
+	bool1:=mysql.Modification(test)
+	if bool1==true{
+		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "修改成功！"})
+		w.Write(msg)
+	}else{
+		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "修改失败！"})
+		w.WriteHeader(400)
+		w.Write(msg)
+	}
+	mysql.Close()
+}
+//func show(w http.ResponseWriter,r *http.Request)  {
+//	mysql.Init()
+//	var test[] _struct.Text
+//	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
+//	data:=mysql.Show(test)
+//	if data!=nil{
+//		msg, _ := json.Marshal(test)
+//		w.Write(msg)
+//	}else{
+//		msg, _ := json.Marshal(_struct.Result{
+//			Code: 400,
+//			Msg:  "查询失败！",
+//		})
+//		w.WriteHeader(400)
+//		w.Write(msg)
+//	}
+//}
 func main()  {
-	   http.HandleFunc("/delu_01",Delu_01)
-	   http.ListenAndServe(":8080",nil)
+	http.HandleFunc("/Login",Login)
+	http.HandleFunc("/register",register)
+	http.HandleFunc("/addition",addition)
+	http.HandleFunc("/delete",delete)
+	http.HandleFunc("/modification",modification)
+	http.HandleFunc("/show",show)
+	http.ListenAndServe(":8080",nil)
 }
