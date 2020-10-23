@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"mygo/main/my/mysql"
-	_struct "mygo/main/my/struct"
-	"net/http"
 	_ "mygo/main/my/mysql"
 	_ "mygo/main/my/struct"
+	_struct "mygo/main/my/struct"
+	"net/http"
 )
 func Login(w http.ResponseWriter,r *http.Request)  {
 	var dl _struct.Login
@@ -84,23 +84,16 @@ func modification(w http.ResponseWriter,r *http.Request)  {
 	}
 	mysql.Close()
 }
-//func show(w http.ResponseWriter,r *http.Request)  {
-//	mysql.Init()
-//	var test[] _struct.Text
-//	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
-//	data:=mysql.Show(test)
-//	if data!=nil{
-//		msg, _ := json.Marshal(test)
-//		w.Write(msg)
-//	}else{
-//		msg, _ := json.Marshal(_struct.Result{
-//			Code: 400,
-//			Msg:  "查询失败！",
-//		})
-//		w.WriteHeader(400)
-//		w.Write(msg)
-//	}
-//}
+func show(w http.ResponseWriter,r *http.Request)  {
+	mysql.Init()
+	var test _struct.Text
+	data:=mysql.Show()
+	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
+	msg, _ := json.Marshal(data)
+	w.Header().Set("name","ifbi")
+	w.WriteHeader(200)
+	w.Write(msg)
+}
 func main()  {
 	http.HandleFunc("/Login",Login)
 	http.HandleFunc("/register",register)

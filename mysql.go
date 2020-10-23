@@ -3,8 +3,8 @@ package mysql
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	_struct "mygo/main/my/struct"
 	_ "mygo/main/my/struct"
+	_struct "mygo/main/my/struct"
 )
 
 var Db *sql.DB
@@ -113,14 +113,22 @@ func Modification(test _struct.Text) bool {
 		return false
 	}
 }
-func Show(test [] _struct.Text) ([] _struct.Text) {
-	data,err:=Db.Query("select *from Text")
-	i:=0
-	if err!=nil{
-		for data.Next(){
-			data.Scan(&test[i].Num,&test[i].Text)
-			i=i+1
-		}
+func Show()(test2 _struct.Text){
+	var test1 _struct.Text
+	rows,_ := Db.Query("select id,text from Text")
+	for rows.Next()  {
+		// 扫描行并把扫描到到数据赋值
+		rows.Scan(&test1.Num,&test1.Text)
 	}
-	return test
+	return test1
+	//var test1 [] _struct.Text
+	//rows,_ := Db.Query("select id,text from Text")
+	//i:=0
+	//for rows.Next()  {
+	//	// 扫描行并把扫描到到数据赋值
+	//	rows.Scan(&test1[i].Num,&test1[i].Text)
+	//	i=i+1
+	//}
+	//return test1
+
 }
