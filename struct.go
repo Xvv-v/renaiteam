@@ -1,6 +1,6 @@
 package _struct
 type Login struct {
-	Num int `json:"num"`
+	Num string `json:"num"`
 	Password string `json:"password"`
 }
 type Result struct {

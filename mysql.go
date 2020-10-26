@@ -24,7 +24,7 @@ func Close()  {
 func  Login (login _struct.Login) bool{
 	stmt, _ :=Db.Prepare("select num,password from delu where num=? and password=?")
 	rows,err:=stmt.Query(login.Num,login.Password)
-	var num1 int
+	var num1 string
 	var password1 string
 	if err!=nil{
 		return false
@@ -113,22 +113,15 @@ func Modification(test _struct.Text) bool {
 		return false
 	}
 }
-func Show()(test2 _struct.Text){
-	var test1 _struct.Text
-	rows,_ := Db.Query("select id,text from Text")
-	for rows.Next()  {
-		// 扫描行并把扫描到到数据赋值
-		rows.Scan(&test1.Num,&test1.Text)
-	}
-	return test1
-	//var test1 [] _struct.Text
-	//rows,_ := Db.Query("select id,text from Text")
-	//i:=0
-	//for rows.Next()  {
-	//	// 扫描行并把扫描到到数据赋值
-	//	rows.Scan(&test1[i].Num,&test1[i].Text)
-	//	i=i+1
-	//}
-	//return test1
+func Show()(test2[] _struct.Text){
 
+				var data[] _struct.Text
+				rows,_ := Db.Query("select id,text from Text")
+				for rows.Next()  {
+					var test1 _struct.Text
+			// 扫描行并把扫描到到数据赋值
+			rows.Scan(&test1.Num,&test1.Text)
+			data = append(data,test1)
+	}
+	return data
 }
