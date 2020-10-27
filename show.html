@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>show</title>
+    <script type="text/javascript" src="./function.js"></script><!bai--引用js文件--><!bai--引用js文件-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background: url(Desert.jpg) no-repeat 0px 0px;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            -moz-background-size: 100% 100%;
+        }
+        body {
+            display: flex;
+            /*align-items: center;上下居中*/
+            /*justify-content: center;左右居中*/
+            height: 100%;
+        }
+        #div{
+            display: flex;
+            /*align-items: center;*/
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body onload="myShow()">
+<div id="div">
+    <p id="temp">
+
+    </p>
+</div>
+
+</body>
+</html>

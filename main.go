@@ -6,8 +6,8 @@ import (
 	"log"
 	"mygo/main/my/mysql"
 	_ "mygo/main/my/mysql"
-	_ "mygo/main/my/struct"
-	_struct "mygo/main/my/struct"
+	_ "mygo/main/my/structural_text"
+	_struct "mygo/main/my/structural_text"
 	"net/http"
 	"strconv"
 )
@@ -18,6 +18,7 @@ func Login(w http.ResponseWriter,r *http.Request)  {
 	mysql.Init()
 	bool1:=mysql.Login(dl)
 	if bool1==true{
+		r.Cookie("user");
 		data,err:=json.Marshal(_struct.Result{Code: 200, Msg: "验证成功！"})
 		if err!=nil{
 			log.Println(err,"测试")
@@ -26,8 +27,10 @@ func Login(w http.ResponseWriter,r *http.Request)  {
 		var a json.RawMessage
 		a = data
 		b,_:=a.MarshalJSON()
+		//msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "验证成功！"})
 		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
 		w.Header().Set("Access-Control-Allow-Origin","*")
+		fmt.Println(string(b))
 		w.Write(b)
 	} else{
 		data,err:=json.Marshal(_struct.Result{Code: 400, Msg: "验证失败！"})
@@ -86,12 +89,31 @@ func addition (w http.ResponseWriter,r *http.Request)  {
 	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
 	bool1:=mysql.Addition(test)
 	if bool1==true{
-		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "添加成功！"})
-		w.Write(msg)
+		data,err:=json.Marshal(_struct.Result{Code: 200, Msg: "验证成功！"})
+		if err!=nil{
+			log.Println(err,"测试")
+			return
+		}
+		var a json.RawMessage
+		a = data
+		b,_:=a.MarshalJSON()
+		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+		w.Header().Set("Access-Control-Allow-Origin","*")
+		w.Write(b)
 	}else{
-		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "添加失败！"})
-		w.WriteHeader(400)
-		w.Write(msg)
+		data,err:=json.Marshal(_struct.Result{Code: 400, Msg: "验证失败！"})
+		if err!=nil{
+			log.Println(err,"测试")
+			return
+		}
+		var a json.RawMessage
+		a = data
+		b,_:=a.MarshalJSON()
+		//msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "验证失败账号或密码错误！"})
+		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+		w.Header().Set("Access-Control-Allow-Origin","*")
+		fmt.Println(string(b))
+		w.Write(b)
 	}
 	mysql.Close()
 }
@@ -101,12 +123,31 @@ func delete(w http.ResponseWriter,r *http.Request)  {
 	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
 	bool1:=mysql.Delete(test)
 	if bool1==true{
-		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "删除成功！"})
-		w.Write(msg)
+		data,err:=json.Marshal(_struct.Result{Code: 200, Msg: "验证成功！"})
+		if err!=nil{
+			log.Println(err,"测试")
+			return
+		}
+		var a json.RawMessage
+		a = data
+		b,_:=a.MarshalJSON()
+		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+		w.Header().Set("Access-Control-Allow-Origin","*")
+		w.Write(b)
 	}else{
-		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "删除失败！"})
-		w.WriteHeader(400)
-		w.Write(msg)
+		data,err:=json.Marshal(_struct.Result{Code: 400, Msg: "验证失败！"})
+		if err!=nil{
+			log.Println(err,"测试")
+			return
+		}
+		var a json.RawMessage
+		a = data
+		b,_:=a.MarshalJSON()
+		//msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "验证失败账号或密码错误！"})
+		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+		w.Header().Set("Access-Control-Allow-Origin","*")
+		fmt.Println(string(b))
+		w.Write(b)
 	}
 	mysql.Close()
 }
@@ -116,12 +157,31 @@ func modification(w http.ResponseWriter,r *http.Request)  {
 	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
 	bool1:=mysql.Modification(test)
 	if bool1==true{
-		msg, _ := json.Marshal(_struct.Result{Code: 200, Msg: "修改成功！"})
-		w.Write(msg)
+		data,err:=json.Marshal(_struct.Result{Code: 200, Msg: "验证成功！"})
+		if err!=nil{
+			log.Println(err,"测试")
+			return
+		}
+		var a json.RawMessage
+		a = data
+		b,_:=a.MarshalJSON()
+		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+		w.Header().Set("Access-Control-Allow-Origin","*")
+		w.Write(b)
 	}else{
-		msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "修改失败！"})
-		w.WriteHeader(400)
-		w.Write(msg)
+		data,err:=json.Marshal(_struct.Result{Code: 400, Msg: "验证失败！"})
+		if err!=nil{
+			log.Println(err,"测试")
+			return
+		}
+		var a json.RawMessage
+		a = data
+		b,_:=a.MarshalJSON()
+		//msg, _ := json.Marshal(_struct.Result{Code: 400, Msg: "验证失败账号或密码错误！"})
+		w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+		w.Header().Set("Access-Control-Allow-Origin","*")
+		fmt.Println(string(b))
+		w.Write(b)
 	}
 	mysql.Close()
 }
@@ -130,10 +190,17 @@ func show(w http.ResponseWriter,r *http.Request)  {
 	var test _struct.Text
 	data:=mysql.Show()
 	json.NewDecoder(r.Body).Decode(&test)//获取前端的json数据\
-	msg, _ := json.Marshal(data)
-	w.Header().Set("200","返回的显示数据！")
-	w.WriteHeader(200)
-	w.Write(msg)
+	data1,err:=json.Marshal(data)
+	if err!=nil{
+		log.Println(err,"测试")
+		return
+	}
+	var a json.RawMessage
+	a = data1
+	b,_:=a.MarshalJSON()
+	w.Header().Set("Content-Length",strconv.Itoa(len(b)))
+	w.Header().Set("Access-Control-Allow-Origin","*")
+	w.Write(b)
 }
 func main()  {
 	http.HandleFunc("/Login",Login)
