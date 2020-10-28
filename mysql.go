@@ -3,10 +3,9 @@ package mysql
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	_ "mygo/main/my/struct"
-	_struct "mygo/main/my/struct"
+	"mygo/main/my/structural_text"
+	_ "mygo/main/my/structural_text"
 )
-
 var Db *sql.DB
 func Init() {
 	var err error
@@ -21,9 +20,9 @@ func Close()  {
 		return
 	}
 }
-func  Login (login _struct.Login) bool{
-	stmt, _ :=Db.Prepare("select num,password from delu where num=? and password=?")
-	rows,err:=stmt.Query(login.Num,login.Password)
+func  Login (login structural_text.Login) bool{
+	stmt, _ :=Db.Prepare("select accout,password from login where accout=? and password=?")
+	rows,err:=stmt.Query(login.Accout,login.Password)
 	var num1 string
 	var password1 string
 	if err!=nil{
@@ -32,23 +31,22 @@ func  Login (login _struct.Login) bool{
 		for rows.Next(){
 			rows.Columns()
 			rows.Scan(&num1,&password1)
-
 		}
-		if login.Num==num1&&login.Password==password1{
+		if login.Accout==num1&&login.Password==password1{
 			return true
 		} else{
 			return false
 		}
 	}
 }
-func Register(login _struct.Login) bool {
-	stmt1, _ :=Db.Prepare("select num from delu where num=? ")
-	_,err2:=stmt1.Query(login.Num)
+func Register(login structural_text.Login) bool {
+	stmt1, _ :=Db.Prepare("select accout from login where accout=? ")
+	_,err2:=stmt1.Query(login.Accout)
 	if err2!=nil{
 		return false
 	}else{
-		stmt, err := Db.Prepare("insert into delu(num,password)values(?,?)")
-		_,err1:=stmt.Exec(login.Num,login.Password)
+		stmt, err := Db.Prepare("insert into login(accout,password)values(?,?)")
+		_,err1:=stmt.Exec(login.Accout,login.Password)
 		if err!=nil{
 			return false
 		}else{
@@ -60,7 +58,7 @@ func Register(login _struct.Login) bool {
 		}
 	}
 }
-func Addition(test _struct.Text) bool {
+func Addition(test structural_text.Text) bool {
 	stmt, _ := Db.Prepare("select id from Text where id=?")
 	_, err := stmt.Query(test.Num)
 	if err != nil {
@@ -75,10 +73,10 @@ func Addition(test _struct.Text) bool {
 		}
 	}
 }
-func Delete(test _struct.Text) bool {
+func Delete(test structural_text.Text) bool {
 	stmt, _ := Db.Prepare("select id from Text where id=?")
 	res, _:= stmt.Query(test.Num)
-	var id int
+	var id string
 	for res.Next() {
 		res.Scan(&id)
 	}
@@ -94,10 +92,10 @@ func Delete(test _struct.Text) bool {
 		return false
 	}
 }
-func Modification(test _struct.Text) bool {
+func Modification(test structural_text.Text) bool {
 	stmt, _ := Db.Prepare("select id from Text where id=?")
 	res, _:= stmt.Query(test.Num)
-	var id int
+	var id string
 	for res.Next() {
 		res.Scan(&id)
 	}
@@ -113,12 +111,12 @@ func Modification(test _struct.Text) bool {
 		return false
 	}
 }
-func Show()(test2[] _struct.Text){
+func Show()(test2[] structural_text.Text){
 
-				var data[] _struct.Text
+				var data[] structural_text.Text
 				rows,_ := Db.Query("select id,text from Text")
 				for rows.Next()  {
-					var test1 _struct.Text
+					var test1 structural_text.Text
 			// 扫描行并把扫描到到数据赋值
 			rows.Scan(&test1.Num,&test1.Text)
 			data = append(data,test1)

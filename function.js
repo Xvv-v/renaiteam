@@ -15,24 +15,6 @@ function SendLogin(url,information) {
         }
     }
 }
-function SendShow(url,information) {
-    var httpRequest =new XMLHttpRequest();
-    httpRequest.open("POST",url,true);
-    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-    httpRequest.send(JSON.stringify(information));
-    httpRequest.onreadystatechange =()=>{
-        if (httpRequest.readyState == 4 && httpRequest.status==200){
-            var data=JSON.parse(httpRequest.responseText);
-            var oPNode = document.getElementById("temp");//获取p节点bai的对象
-            for (i=0;i<data.length;i++){
-                    var node = document.createElement('p');//创建一个文本节点
-                    node.innerHTML =data[i].num+data[i].text;
-                    //var node1 = document.createElement('tr');
-                    oPNode.appendChild(node);//将创建的文本内容插zhi入到p节点中dao，追加方式
-            }
-        }
-    }
-}
 function SendRehister(url,information) {
     var httpRequest =new XMLHttpRequest();
     httpRequest.open("POST",url,true);
@@ -50,9 +32,81 @@ function SendRehister(url,information) {
         }
     }
 }
+function SendShow(url,information) {
+    var httpRequest =new XMLHttpRequest();
+    httpRequest.open("POST",url,true);
+    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+    httpRequest.send(JSON.stringify(information));
+    httpRequest.onreadystatechange =()=>{
+        if (httpRequest.readyState == 4 && httpRequest.status==200){
+            var data=JSON.parse(httpRequest.responseText);
+            var oPNode = document.getElementById("temp");//获取p节点bai的对象
+            for (i=0;i<data.length;i++){
+                var node = document.createElement('p');//创建一个文本节点
+                node.innerHTML =data[i].num+data[i].text;
+                //var node1 = document.createElement('tr');
+                oPNode.appendChild(node);//将创建的文本内容插zhi入到p节点中dao，追加方式
+            }
+        }
+    }
+}
+function SendAdd(url,information) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open("POST", url, true);
+    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+    httpRequest.send(JSON.stringify(information));
+    httpRequest.onreadystatechange = () => {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            var data = JSON.parse(httpRequest.responseText);
+            if(data.code==200){
+                alert("添加成功！正在加载......");
+                location.reload();
+                //myShow();
+            }else{
+                alert(data.msg);
+            }
+        }
+    }
+
+}
+function SendDel(url,information) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open("POST", url, true);
+    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+    httpRequest.send(JSON.stringify(information));
+    httpRequest.onreadystatechange = () => {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            var data = JSON.parse(httpRequest.responseText);
+            if(data.code==200){
+                alert("删除成功！正在加载......");
+                location.reload();
+                //myShow();
+            }else{
+                alert(data.msg);
+            }
+        }
+    }
+}
+function SendMod(url,information) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open("POST", url, true);
+    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+    httpRequest.send(JSON.stringify(information));
+    httpRequest.onreadystatechange = () => {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            var data = JSON.parse(httpRequest.responseText);
+            if(data.code==200){
+                alert("修改成功！正在加载......");
+                location.reload();
+            }else{
+                alert(data.msg);
+            }
+        }
+    }
+}
 function validateForm(x,y) {
     if ((x == null || x == "")) {
-        alert("需要输入账号和密码！");
+        alert("需要相应的信息（例如：输入账号和密码编号等）！");
         return false;
     }
     else{
@@ -71,7 +125,7 @@ function myLogin() {
    var b= validateForm(num1,password1);
    if(b){
        var url = "http://localhost:8080/Login";
-       SendLogin(url,{"num":num1,"password":password1});
+       SendLogin(url,{"accout":num1,"password":password1});
    }else{
        return false
    }
@@ -94,13 +148,54 @@ function MyReset() {
         var b= validateForm(num1,password1);
         if(b){
             var url = "http://localhost:8080/register";
-            SendRehister(url,{"num":num1,"password":password1});
+            SendRehister(url,{"accout":num1,"password":password1});
         }else{
             return false
         }
-
-    }
-    function myShow(data) {
-        var url = "http://localhost:8080/show";
-        SendShow(url,{});
+}
+function myShow(data) {
+    var url = "http://localhost:8080/show";
+    SendShow(url,{});
+}
+function myDel() {
+   var num1;
+   var num = document.getElementById("num");
+   num1=num.value;
+   console.log(num1);
+   if(validateForm(num1,null)){
+       var url = "http://localhost:8080/delete";
+       SendDel(url,{"num":num1});
+   }else{
+       return false
    }
+
+}
+function myAdd() {
+   var num1;
+   var text1;
+   var num = document.getElementById("num1");
+   var text = document.getElementById("text1");
+   num1=num.value;
+   text1=text.value;
+   if(validateForm(num1,null)){
+       var url = "http://localhost:8080/addition";
+       SendAdd(url,{"num":num1,text:text1});
+   }else{
+       return false
+   }
+
+}
+function myMod() {
+    var num1;
+    var text1;
+    var num = document.getElementById("num2");
+    var text = document.getElementById("text2");
+    num1=num.value;
+    text1=text.value;
+    if(validateForm(num1,null)){
+        var url = "http://localhost:8080/modification";
+        SendMod(url,{"num":num1,text:text1});
+    }else{
+        return false
+    }
+}
