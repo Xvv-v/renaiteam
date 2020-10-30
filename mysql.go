@@ -59,13 +59,13 @@ func Register(login structural_text.Login) bool {
 	}
 }
 func Addition(test structural_text.Text) bool {
-	stmt, _ := Db.Prepare("select id from Text where id=?")
-	_, err := stmt.Query(test.Num)
+	stmt, _ := Db.Prepare("select id from Text where id=? and user1=?")
+	_, err := stmt.Query(test.Num,test.User)
 	if err != nil {
 		return false
 	} else {
-		stmt1,_:=Db.Prepare("insert into Text(id,text)values(?,?)")
-		_,err:=stmt1.Exec(test.Num,test.Text)
+		stmt1,_:=Db.Prepare("insert into Text(id,text,user1)values(?,?,?)")
+		_,err:=stmt1.Exec(test.Num,test.Text,test.User)
 		if err!=nil{
 			return false
 		}else{
@@ -74,15 +74,15 @@ func Addition(test structural_text.Text) bool {
 	}
 }
 func Delete(test structural_text.Text) bool {
-	stmt, _ := Db.Prepare("select id from Text where id=?")
-	res, _:= stmt.Query(test.Num)
+	stmt, _ := Db.Prepare("select id from Text where id=? and user1=?")
+	res, _:= stmt.Query(test.Num,test.User)
 	var id string
 	for res.Next() {
 		res.Scan(&id)
 	}
 	if id==test.Num {
-		stmt,_:=Db.Prepare("delete from Text where id=?")
-		_,err:=stmt.Exec(test.Num)
+		stmt,_:=Db.Prepare("delete from Text where id=? and user1=?")
+		_,err:=stmt.Exec(test.Num,test.User)
 		if err!=nil{
 			return false
 		}else {
@@ -93,15 +93,15 @@ func Delete(test structural_text.Text) bool {
 	}
 }
 func Modification(test structural_text.Text) bool {
-	stmt, _ := Db.Prepare("select id from Text where id=?")
-	res, _:= stmt.Query(test.Num)
+	stmt, _ := Db.Prepare("select id from Text where id=? and user1=?")
+	res, _:= stmt.Query(test.Num,test.User)
 	var id string
 	for res.Next() {
 		res.Scan(&id)
 	}
 	if id==test.Num {
-		stmt,_:=Db.Prepare("update Text set text=? where id=?")
-		_,err:=stmt.Exec(test.Text,test.Num)
+		stmt,_:=Db.Prepare("update Text set text=? where id=? and user1=?")
+		_,err:=stmt.Exec(test.Text,test.Num,test.User)
 		if err!=nil{
 			return false
 		}else {
@@ -111,10 +111,11 @@ func Modification(test structural_text.Text) bool {
 		return false
 	}
 }
-func Show()(test2[] structural_text.Text){
+func Show(test structural_text.Text)(test2[] structural_text.Text){
 
 				var data[] structural_text.Text
-				rows,_ := Db.Query("select id,text from Text")
+				stmt,_ := Db.Prepare("select id,text from Text where user1=?")
+				rows,_:=stmt.Query(test.User)
 				for rows.Next()  {
 					var test1 structural_text.Text
 			// 扫描行并把扫描到到数据赋值

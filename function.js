@@ -1,3 +1,5 @@
+
+var storage = window.localStorage;
 function SendLogin(url,information) {
     var httpRequest =new XMLHttpRequest();
     httpRequest.open("POST",url,true);
@@ -11,6 +13,7 @@ function SendLogin(url,information) {
                  addshow();
             }else{
                 alert(data.msg);
+                location.reload();
             }
         }
     }
@@ -25,9 +28,10 @@ function SendRehister(url,information) {
             var data=JSON.parse(httpRequest.responseText);
             if(data.code==200){
                 alert("注册成功！正在跳转......");
-                addshow();
+                addLogin();
             }else{
                 alert(data.msg);
+                location.reload();
             }
         }
     }
@@ -64,6 +68,7 @@ function SendAdd(url,information) {
                 //myShow();
             }else{
                 alert(data.msg);
+                location.reload();
             }
         }
     }
@@ -83,6 +88,7 @@ function SendDel(url,information) {
                 //myShow();
             }else{
                 alert(data.msg);
+                location.reload();
             }
         }
     }
@@ -100,6 +106,7 @@ function SendMod(url,information) {
                 location.reload();
             }else{
                 alert(data.msg);
+                location.reload();
             }
         }
     }
@@ -120,6 +127,8 @@ function myLogin() {
     var num = document.getElementById("username");
     var password = document.getElementById("password");
     num1=num.value;
+    var storage = window.localStorage;
+    storage["username"]=num1;
     password1=password.value;
     console.log(num1,password1);
    var b= validateForm(num1,password1);
@@ -135,6 +144,9 @@ function addregister(){
 }
 function addshow(){
     window.location.href="http://localhost:63342/mygoProject/main/my/HTML/show.html?_ijt=rhhlm4ea85bkc8vhpcjrbf0evi"; //你需要跳转的地址
+}
+function addLogin() {
+    window.location.href="http://localhost:63342/mygoProject/main/my/HTML/Login.html?_ijt=hh48cneiaj6ul2269u37i03qj";
 }
 
 function MyReset() {
@@ -155,16 +167,19 @@ function MyReset() {
 }
 function myShow(data) {
     var url = "http://localhost:8080/show";
-    SendShow(url,{});
+    var accout=storage["username"];
+    console.log(accout);
+    SendShow(url,{"user":accout});
 }
 function myDel() {
    var num1;
-   var num = document.getElementById("num");
+   num=document.getElementById("num");
    num1=num.value;
-   console.log(num1);
+    var accout=storage["username"];
+    console.log(accout);
    if(validateForm(num1,null)){
        var url = "http://localhost:8080/delete";
-       SendDel(url,{"num":num1});
+       SendDel(url,{"num":num1,"user":accout});
    }else{
        return false
    }
@@ -179,7 +194,9 @@ function myAdd() {
    text1=text.value;
    if(validateForm(num1,null)){
        var url = "http://localhost:8080/addition";
-       SendAdd(url,{"num":num1,text:text1});
+       var accout=storage["username"];
+       console.log(accout);
+       SendAdd(url,{"num":num1,"text":text1,"user":accout});
    }else{
        return false
    }
@@ -194,7 +211,9 @@ function myMod() {
     text1=text.value;
     if(validateForm(num1,null)){
         var url = "http://localhost:8080/modification";
-        SendMod(url,{"num":num1,text:text1});
+        var accout=storage["username"];
+        console.log(accout);
+        SendMod(url,{"num":num1,"text":text1,"user":accout});
     }else{
         return false
     }

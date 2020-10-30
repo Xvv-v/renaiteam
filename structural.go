@@ -11,4 +11,5 @@ type Result struct {//返回结构结构体
 type Text struct {//记事本文本文本结构体
 	Num string `json:"num"`//编号
 	Text string `json:"text"`//文本
+	User string `json:"user"`
 }
