@@ -7,6 +7,29 @@ import (
 	_ "mygo/main/my/structural_text"
 )
 var Db *sql.DB
+
+func Prepare1( login structural_text.Login ,str string ) bool  {
+	stmt, err := Db.Prepare(str)
+	_,err1:=stmt.Exec(login.Accout,login.Password)
+	if err!=nil{
+		return false
+	}else{
+		if err1!=nil{
+			return false
+		} else{
+			return true
+		}
+	}
+}
+func Prepare2(test structural_text.Text,str string) bool {
+	stmt,_:=Db.Prepare(str)
+	_,err:=stmt.Exec(test.Num,test.Text,test.User)
+		if err!=nil{
+			return false
+		}else {
+			return true
+		}
+}
 func Init() {
 	var err error
 	Db,err=sql.Open("mysql", "root:123456@tcp(localhost:3306)/school")
@@ -45,33 +68,39 @@ func Register(login structural_text.Login) bool {
 	if err2!=nil{
 		return false
 	}else{
-		stmt, err := Db.Prepare("insert into login(accout,password)values(?,?)")
-		_,err1:=stmt.Exec(login.Accout,login.Password)
-		if err!=nil{
-			return false
-		}else{
-			if err1!=nil{
-				return false
-			} else{
-				return true
-			}
-		}
+		str:="insert into login(accout,password)values(?,?)";
+		b:=Prepare1(login,str);
+		return b;
 	}
 }
 func Addition(test structural_text.Text) bool {
 	stmt, _ := Db.Prepare("select id from Text where id=? and user1=?")
-	_, err := stmt.Query(test.Num,test.User)
-	if err != nil {
-		return false
-	} else {
-		stmt1,_:=Db.Prepare("insert into Text(id,text,user1)values(?,?,?)")
-		_,err:=stmt1.Exec(test.Num,test.Text,test.User)
-		if err!=nil{
-			return false
-		}else{
-			return true
-		}
+	res, _:= stmt.Query(test.Num,test.User)
+	var id string
+	for res.Next() {
+		res.Scan(&id)
 	}
+	if id!=test.Num {
+		str:="insert into Text(id,text,user1)values(?,?,?)";
+		b:=Prepare2(test,str);
+		return b;
+	}else{
+		return false
+	}
+	//-==================================================================
+	//stmt, _ := Db.Prepare("select id from Text where id=? and user1=?")
+	//_, err := stmt.Query(test.Num,test.User)
+	//if err != nil {
+	//	return false
+	//} else {
+	//	stmt1,_:=Db.Prepare("insert into Text(id,text,user1)values(?,?,?)")
+	//	_,err:=stmt1.Exec(test.Num,test.Text,test.User)
+	//	if err!=nil{
+	//		return false
+	//	}else{
+	//		return true
+	//	}
+	//}
 }
 func Delete(test structural_text.Text) bool {
 	stmt, _ := Db.Prepare("select id from Text where id=? and user1=?")
