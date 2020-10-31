@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>show</title>
+    <script type="text/javascript" src="./function.js"></script><!bai--引用js文件--><!bai--引用js文件-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background: url(Desert.jpg) no-repeat 0px 0px;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            -moz-background-size: 100% 100%;
+        }
+        body {
+            display: flex;
+            /*align-items: center;上下居中*/
+            /*justify-content: center;左右居中*/
+            height: 100%;
+        }
+        #div{
+            /*display: flex;*/
+            /*align-items: center;*/
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+        input {
+            margin-left: 15px;
+            border-radius: 5px;
+            border-style: hidden;
+            height: 30px;
+            width: 140px;
+            background-color: rgba(216, 191, 216, 0.5);
+            outline: none;
+            color: #f0edf3;
+            padding-left: 10px;
+        }
+        #temp{
+            justify-content: center;
+            height: 80%;
+            width: 100%;
+        }
+
+        .button {
+            border-color: cornsilk;
+            background-color: rgba(100, 149, 237, .7);
+            color: aliceblue;
+            border-style: hidden;
+            border-radius: 5px;
+            width: 100px;
+            height: 31px;
+            font-size: 16px;
+        }
+        #id{
+            color: royalblue;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body onload="myShow()">
+<div id="div">
+    编号 文本
+    <p id="temp">
+
+    </p>
+    <div id="div1">
+        <span id="id">编号：</span><input type="text" id="num">
+        <input id="2" class="button" onclick="myDel()" spellcheck ="false" value="DELinformation">
+        <p><span id="id">编号：</span><input type="text" id="num1">
+        <span id="id">文本：</span><input type="text" id="text1">
+        <input id="2"  class="button" onclick="myAdd()" spellcheck ="false" value="Addinformation">
+        </p>
+        <p><span id="id">编号：</span><input type="text" id="num2">
+            <span id="id">文本：</span><input type="text" id="text2">
+            <input id="2"  class="button" onclick="myMod()" spellcheck ="false" value="Modinformation">
+        </p>
+    </div>
+</div>
+</body>
+</html>
